@@ -180,6 +180,16 @@ a:hover { text-decoration: underline; }
 .node-card h4 { margin: 0; font-size: 16px; }
 .node.done .node-card h4 { text-decoration: line-through; color: var(--slate); }
 .node-card .desc { color: var(--slate); font-size: 14px; margin: 4px 0 8px; }
+/* ----- Embedded topic video (click-to-play facade) ----- */
+.video { margin: 10px 0; }
+.video-thumb { position: relative; display: block; width: 100%; max-width: 460px; aspect-ratio: 16 / 9; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: pointer; background: #0b1b33; }
+.video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .92; transition: opacity .15s ease, transform .2s ease; }
+.video-thumb:hover img { opacity: 1; transform: scale(1.02); }
+.video-thumb .play { position: absolute; inset: 0; margin: auto; width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%; background: rgba(29, 111, 224, .94); color: #fff; font-size: 20px; padding-left: 3px; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+.video-thumb:hover .play { background: var(--blue-700); }
+.video-frame { position: relative; width: 100%; max-width: 460px; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.video-frame iframe { width: 100%; height: 100%; border: 0; }
+.video-fallback { display: inline-block; font-size: 13px; background: var(--blue-100); color: var(--blue-700); padding: 5px 12px; border-radius: 8px; font-weight: 600; }
 .node-card .links { display: flex; flex-wrap: wrap; gap: 8px; }
 .node-card .links a { font-size: 13px; background: var(--blue-100); color: var(--blue-700); padding: 4px 10px; border-radius: 8px; font-weight: 600; }
 .node-card .links a:hover { background: #d9e7fd; text-decoration: none; }

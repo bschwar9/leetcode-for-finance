@@ -307,6 +307,44 @@ const DATA = {
   ],
 };
 
+/* ---- Curated YouTube videos per roadmap topic ----------------------------
+   Maps a roadmap node's `id` to a YouTube *video ID* (the part after
+   "watch?v=" in a YouTube URL, e.g. youtube.com/watch?v=ABCDEFGHIJK -> ABCDEFGHIJK).
+   These power the embedded players on the Roadmap tab.
+
+   NOTE: these are SAMPLE picks — replace any value with the exact video you
+   want for that topic. Any topic without an entry (or with an invalid ID)
+   automatically falls back to a "Watch on YouTube" search link, so the UI
+   never looks broken. */
+const TOPIC_VIDEOS = {
+  // Morgan Stanley — Financial Analyst
+  'three-statements': 'WdTKtdRSju0',
+  'accrual': 'EXkpHySVZmk',
+  'dcf': 'fd_emLLzJnk',
+  'comps': 'Js3sLLrAGtY',
+  'precedent': 'g8r_qy3T9Mk',
+  'three-statement-model': 'EFWN7Hf-4uM',
+  'lbo': 'cxN4Mn-W7eY',
+  'markets': 'rs3a4tHQc2I',
+  'behavioral': 'jmwYZQTwGZw',
+  // Goldman Sachs — Investment Banking Analyst
+  'gs-3stmt': 'WdTKtdRSju0',
+  'gs-val': 'wYDWfsScO0o',
+  'gs-lbo': 'cxN4Mn-W7eY',
+  'gs-merger': 'jBBZAUL-7eE',
+  'gs-why': 'jmwYZQTwGZw',
+  // JPMorgan — Quantitative Analyst
+  'q-prob': 'XHGwQDD-Mok',
+  'q-stoch': 'qdbkvD4N-us',
+  'q-python': 'rfscVS0vtbw',
+  'q-ds': 'RBSGKlAvoiM',
+  'q-options': 'pwdHmGgL-p8',
+  // BlackRock — Risk Analyst
+  'r-var': 'IJZmTYIxLuU',
+  'r-fixed': 'tIfb-9zZ5Ko',
+  'r-python': 'r-uOLxNrNk8',
+};
+
 /* ---- tiny helpers shared by pages ---------------------------------------- */
 function findCompany(companyId) {
   return DATA.companies.find((c) => c.id === companyId);

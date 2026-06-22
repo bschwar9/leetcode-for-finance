@@ -222,6 +222,27 @@ function saveDone(c, r, set) {
   localStorage.setItem(progressKey(c, r), JSON.stringify([...set]));
 }
 
+// Wire up a lazy-loaded YouTube embed. The thumbnail loads first; clicking it
+// swaps in the iframe (so we don't load 20 players at once). If the thumbnail
+// 404s — i.e. the video id is invalid — we degrade to a plain YouTube link.
+function setupVideo(videoEl) {
+  const vid = videoEl.dataset.vid;
+  const fallback = videoEl.dataset.fallback;
+  const showLink = () => {
+    videoEl.innerHTML = fallback
+      ? `<a class="video-fallback" href="${fallback}" target="_blank" rel="noopener">▶ Watch on YouTube</a>`
+      : '';
+  };
+  const img = $('img', videoEl);
+  if (img) img.onerror = showLink;
+  const thumb = $('.video-thumb', videoEl);
+  if (thumb) thumb.onclick = () => {
+    videoEl.innerHTML =
+      `<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(vid)}?autoplay=1&rel=0" ` +
+      `title="Topic video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+  };
+}
+
 function renderRoadmap(c, r) {
   const wrap = el('div');
   const done = getDone(c, r);
@@ -253,15 +274,30 @@ function renderRoadmap(c, r) {
       const nodeEl = el('div', 'node' + (isDone ? ' done' : ''));
       const links = node.resources.map((res) =>
         `<a href="${escapeHtml(res.url)}" target="_blank" rel="noopener">▶ ${escapeHtml(res.label)}</a>`).join('');
+      // Embedded video for this topic, if one is mapped. Falls back to a
+      // YouTube link (the first resource) if the id is missing or invalid.
+      const vid = typeof TOPIC_VIDEOS !== 'undefined' ? TOPIC_VIDEOS[node.id] : null;
+      const fallbackUrl = (node.resources[0] && node.resources[0].url) || '';
+      const videoHtml = vid
+        ? `<div class="video" data-vid="${escapeHtml(vid)}" data-fallback="${escapeHtml(fallbackUrl)}">
+             <button class="video-thumb" type="button" aria-label="Play ${escapeHtml(node.title)} video">
+               <img src="https://i.ytimg.com/vi/${escapeHtml(vid)}/hqdefault.jpg" alt="" loading="lazy" />
+               <span class="play">▶</span>
+             </button>
+           </div>`
+        : '';
       nodeEl.innerHTML = `
         <div class="node-card">
           <div class="check" role="checkbox" aria-checked="${isDone}">${isDone ? '✓' : ''}</div>
           <div class="body">
             <h4>${escapeHtml(node.title)} <span class="pill ${diffClass(node.difficulty)}">${escapeHtml(node.difficulty)}</span></h4>
             <div class="desc">${escapeHtml(node.desc)}</div>
+            ${videoHtml}
             <div class="links">${links}</div>
           </div>
         </div>`;
+      const videoEl = $('.video', nodeEl);
+      if (videoEl) setupVideo(videoEl);
       const check = $('.check', nodeEl);
       check.onclick = () => {
         if (done.has(node.id)) { done.delete(node.id); nodeEl.classList.remove('done'); check.textContent = ''; }

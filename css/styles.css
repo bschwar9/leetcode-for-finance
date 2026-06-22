@@ -95,6 +95,9 @@ a:hover { text-decoration: underline; }
   display: grid; place-items: center; font-weight: 800; font-size: 13px;
 }
 .logo-badge.lg { width: 64px; height: 64px; font-size: 20px; border-radius: 14px; }
+/* When showing a real logo image, use a clean white tile instead of the blue chip */
+.logo-badge.logo-pic { background: #fff; border: 1px solid var(--line); padding: 5px; overflow: hidden; }
+.logo-badge.logo-pic img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
 /* ----- Section headings --------------------------------------------------- */
 .section { padding: 36px 0; }

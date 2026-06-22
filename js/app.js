@@ -21,6 +21,21 @@ const colorFor = (str) => {
   return `hsl(${Math.abs(h) % 360}, 55%, 45%)`;
 };
 
+// Company logo badge: real logo by domain, with graceful fallback to initials.
+// If the image fails to load, we drop back to the plain initials badge.
+function companyLogo(c, extraCls = '') {
+  const initials = escapeHtml(c.logo);
+  const cls = `logo-badge ${extraCls}`.trim();
+  if (c.domain) {
+    const onerr =
+      "var b=this.parentNode;b.classList.remove('logo-pic');b.textContent='" + initials + "'";
+    return `<div class="${cls} logo-pic">` +
+      `<img src="https://logo.clearbit.com/${encodeURIComponent(c.domain)}?size=128" ` +
+      `alt="${escapeHtml(c.name)} logo" loading="lazy" onerror="${onerr}"></div>`;
+  }
+  return `<div class="${cls}">${initials}</div>`;
+}
+
 /* ==========================================================================
    HOME PAGE
    ========================================================================== */
@@ -42,7 +57,7 @@ function renderHome() {
     const roleList = c.roles.map((r) => `<span class="pill tag">${escapeHtml(r.title)}</span>`).join(' ');
     const card = el('div', 'card link', `
       <div class="row">
-        <div class="logo-badge">${escapeHtml(c.logo)}</div>
+        ${companyLogo(c)}
         <div>
           <h3>${escapeHtml(c.name)}</h3>
           <div class="sub">${escapeHtml(c.industry)} · ${escapeHtml(c.hq)}</div>
@@ -85,7 +100,7 @@ function setupSearch() {
     } else {
       matches.forEach((m) => {
         const item = el('div', 'item', `
-          <div class="logo-badge">${escapeHtml(m.company.logo)}</div>
+          ${companyLogo(m.company)}
           <div>
             <div style="font-weight:700">${escapeHtml(m.role.title)}</div>
             <div class="sub">${escapeHtml(m.company.name)} · ${escapeHtml(m.company.industry)}</div>
@@ -129,7 +144,7 @@ function renderRole() {
   const header = el('div');
   header.innerHTML = `
     <div class="role-head">
-      <div class="logo-badge lg">${escapeHtml(c.logo)}</div>
+      ${companyLogo(c, 'lg')}
       <div class="meta">
         <div class="crumb"><a href="index.html">Home</a> › ${escapeHtml(c.name)}</div>
         <h1>${escapeHtml(r.title)}</h1>

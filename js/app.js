@@ -22,16 +22,22 @@ const colorFor = (str) => {
 };
 
 // Company logo badge: real logo by domain, with graceful fallback to initials.
-// If the image fails to load, we drop back to the plain initials badge.
+// Tries DuckDuckGo's icon service, then Google's favicon service, then finally
+// falls back to the plain initials badge if neither resolves.
 function companyLogo(c, extraCls = '') {
   const initials = escapeHtml(c.logo);
   const cls = `logo-badge ${extraCls}`.trim();
   if (c.domain) {
+    const d = encodeURIComponent(c.domain);
+    const ddg = `https://icons.duckduckgo.com/ip3/${d}.ico`;
+    const google = `https://www.google.com/s2/favicons?domain=${d}&sz=128`;
+    // Walk the fallback chain on each load error, ending at the initials badge.
     const onerr =
-      "var b=this.parentNode;b.classList.remove('logo-pic');b.textContent='" + initials + "'";
+      "var s=this.dataset.step||'1';" +
+      "if(s==='1'){this.dataset.step='2';this.src='" + google + "';}" +
+      "else{var b=this.parentNode;b.classList.remove('logo-pic');b.textContent='" + initials + "';}";
     return `<div class="${cls} logo-pic">` +
-      `<img src="https://logo.clearbit.com/${encodeURIComponent(c.domain)}?size=128" ` +
-      `alt="${escapeHtml(c.name)} logo" loading="lazy" onerror="${onerr}"></div>`;
+      `<img src="${ddg}" alt="${escapeHtml(c.name)} logo" loading="lazy" onerror="${onerr}"></div>`;
   }
   return `<div class="${cls}">${initials}</div>`;
 }

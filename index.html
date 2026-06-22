@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ascend — The roadmap to your dream job</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Top nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <span class="mark">A</span> Asc<span class="accent">end</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#browse">Browse</a>
+        <a href="#how">How it works</a>
+        <a class="btn ghost" href="role.html?company=morgan-stanley&role=financial-analyst">Try a demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero + search -->
+  <section class="hero">
+    <div class="container">
+      <h1>Your <span class="grad">roadmap</span> to landing the job.</h1>
+      <p class="sub">
+        Pick a company and role. We hand you a structured study roadmap, crowd-sourced
+        interview questions, networking targets, comp data, and the exact skills you need —
+        all in one place.
+      </p>
+      <div class="search-wrap">
+        <div class="search-box">
+          <span style="font-size:18px;color:var(--slate)">🔎</span>
+          <input id="search" type="text" placeholder="Search a company or role… (try “Morgan Stanley” or “quant”)" autocomplete="off" />
+        </div>
+        <div id="searchResults" class="search-results hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Browse by field -->
+  <section class="section" id="browse">
+    <div class="container">
+      <h2>Browse by field</h2>
+      <p class="muted">We’re starting with finance — more industries coming.</p>
+      <div id="fields" class="grid cols-4"></div>
+    </div>
+  </section>
+
+  <!-- Popular companies -->
+  <section class="section">
+    <div class="container">
+      <h2>Popular companies</h2>
+      <p class="muted">Click a company to see its roles and roadmaps.</p>
+      <div id="companies" class="grid cols-2"></div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" id="how">
+    <div class="container">
+      <h2>How it works</h2>
+      <p class="muted">Five tabs per role, each built to move you one step closer to an offer.</p>
+      <div class="grid cols-3">
+        <div class="card"><h3>🗺️ Roadmap</h3><p class="sub">An ordered, NeetCode-style tree of topics to master — with curated videos and resources. Check things off as you go.</p></div>
+        <div class="card"><h3>💬 Interview Questions</h3><p class="sub">Real, crowd-sourced questions by round and difficulty. Upvote the useful ones and add your own.</p></div>
+        <div class="card"><h3>🤝 Networking</h3><p class="sub">People in that exact role you can reach out to — with ready-to-send message templates.</p></div>
+        <div class="card"><h3>💰 Compensation</h3><p class="sub">Self-reported base, bonus, and signing ranges so you know your worth before you negotiate.</p></div>
+        <div class="card"><h3>✅ Skills & Requirements</h3><p class="sub">Must-have skills, nice-to-haves, and the certifications that actually move the needle.</p></div>
+        <div class="card"><h3>🚀 More to come</h3><p class="sub">Resume review, mock interviews, application tracker, and company-culture reviews are on the roadmap.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      Ascend · MVP prototype · Sample data for demonstration only.
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>renderHome();</script>
+</body>
+</html>

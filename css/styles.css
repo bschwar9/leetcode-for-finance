@@ -195,9 +195,14 @@ a:hover { text-decoration: underline; }
 .pill.tag { background: var(--blue-100); color: var(--blue-700); }
 
 /* ----- Interview questions ------------------------------------------------ */
-.q-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.q-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
 .q-toolbar .filter { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-weight: 600; color: var(--slate); cursor: pointer; font-size: 13px; }
 .q-toolbar .filter.active { background: var(--blue-600); color: #fff; border-color: var(--blue-600); }
+.q-group { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.q-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--slate); margin: 0 2px 0 6px; }
+.q-body .asked { font-size: 12px; color: var(--slate); }
+.q-body .stale { font-size: 11px; font-weight: 800; color: var(--amber); background: #fdf0db; padding: 1px 9px; border-radius: 20px; }
+.empty-note { color: var(--slate); padding: 22px; text-align: center; border: 1px dashed var(--line); border-radius: 12px; }
 .q-item { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; gap: 14px; align-items: center; }
 .q-item + .q-item { margin-top: 10px; }
 .vote { display: flex; flex-direction: column; align-items: center; min-width: 46px; }

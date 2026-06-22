@@ -94,14 +94,14 @@ const DATA = {
 
           // ----- TAB 2: Crowd-sourced interview questions ---------------
           questions: [
-            { q: 'Walk me through a DCF.', difficulty: 'Medium', tags: ['Valuation', 'Technical'], votes: 312, round: 'Superday' },
-            { q: 'How are the three financial statements connected?', difficulty: 'Easy', tags: ['Accounting'], votes: 287, round: 'Phone screen' },
-            { q: 'If you could only use one statement to value a company, which and why?', difficulty: 'Medium', tags: ['Accounting'], votes: 154, round: 'Superday' },
-            { q: 'Walk me through a paper LBO.', difficulty: 'Hard', tags: ['Modeling', 'PE'], votes: 201, round: 'Superday' },
-            { q: 'Why Morgan Stanley over other banks?', difficulty: 'Easy', tags: ['Behavioral', 'Fit'], votes: 176, round: 'All rounds' },
-            { q: 'Pitch me a stock.', difficulty: 'Medium', tags: ['Markets'], votes: 142, round: 'Final' },
-            { q: 'What happens to FCF if depreciation increases by $10?', difficulty: 'Medium', tags: ['Accounting'], votes: 98, round: 'Phone screen' },
-            { q: 'Tell me about a time you worked on a team under a tight deadline.', difficulty: 'Easy', tags: ['Behavioral'], votes: 67, round: 'HireVue' },
+            { q: 'Walk me through a DCF.', difficulty: 'Medium', tags: ['Valuation', 'Technical'], votes: 312, round: 'Superday', date: '2023-11-04' },
+            { q: 'How are the three financial statements connected?', difficulty: 'Easy', tags: ['Accounting'], votes: 287, round: 'Phone screen', date: '2024-02-18' },
+            { q: 'If you could only use one statement to value a company, which and why?', difficulty: 'Medium', tags: ['Accounting'], votes: 154, round: 'Superday', date: '2025-09-12' },
+            { q: 'Walk me through a paper LBO.', difficulty: 'Hard', tags: ['Modeling', 'PE'], votes: 201, round: 'Superday', date: '2024-07-22' },
+            { q: 'Why Morgan Stanley over other banks?', difficulty: 'Easy', tags: ['Behavioral', 'Fit'], votes: 176, round: 'All rounds', date: '2026-04-30' },
+            { q: 'Pitch me a stock.', difficulty: 'Medium', tags: ['Markets'], votes: 142, round: 'Final', date: '2026-05-15' },
+            { q: 'What happens to FCF if depreciation increases by $10?', difficulty: 'Medium', tags: ['Accounting'], votes: 98, round: 'Phone screen', date: '2022-10-08' },
+            { q: 'Tell me about a time you worked on a team under a tight deadline.', difficulty: 'Easy', tags: ['Behavioral'], votes: 67, round: 'HireVue', date: '2026-03-02' },
           ],
 
           // ----- TAB 3: Networking (people to reach out to) -------------
@@ -168,10 +168,10 @@ const DATA = {
             ]},
           ],
           questions: [
-            { q: 'Walk me through an accretion / dilution analysis.', difficulty: 'Hard', tags: ['Modeling'], votes: 188, round: 'Superday' },
-            { q: 'What makes a good LBO candidate?', difficulty: 'Medium', tags: ['PE'], votes: 121, round: 'Superday' },
-            { q: 'Why Goldman Sachs?', difficulty: 'Easy', tags: ['Fit'], votes: 205, round: 'All rounds' },
-            { q: 'Walk me through your resume.', difficulty: 'Easy', tags: ['Behavioral'], votes: 144, round: 'HireVue' },
+            { q: 'Walk me through an accretion / dilution analysis.', difficulty: 'Hard', tags: ['Modeling'], votes: 188, round: 'Superday', date: '2024-09-10' },
+            { q: 'What makes a good LBO candidate?', difficulty: 'Medium', tags: ['PE'], votes: 121, round: 'Superday', date: '2025-12-01' },
+            { q: 'Why Goldman Sachs?', difficulty: 'Easy', tags: ['Fit'], votes: 205, round: 'All rounds', date: '2026-05-20' },
+            { q: 'Walk me through your resume.', difficulty: 'Easy', tags: ['Behavioral'], votes: 144, round: 'HireVue', date: '2023-08-15' },
           ],
           people: [
             { name: 'Daniel Cho', title: 'Analyst', team: 'TMT', tenure: '2 yrs', school: 'Cornell', note: 'Active on alumni networks.' },
@@ -226,10 +226,10 @@ const DATA = {
             ]},
           ],
           questions: [
-            { q: 'A fair coin is flipped until two heads in a row. Expected number of flips?', difficulty: 'Hard', tags: ['Probability'], votes: 233, round: 'Technical' },
-            { q: 'Derive the Black-Scholes PDE.', difficulty: 'Hard', tags: ['Derivatives'], votes: 167, round: 'Onsite' },
-            { q: 'Implement an LRU cache.', difficulty: 'Medium', tags: ['Coding'], votes: 142, round: 'Coding' },
-            { q: 'What is delta hedging and why do it?', difficulty: 'Medium', tags: ['Derivatives'], votes: 101, round: 'Onsite' },
+            { q: 'A fair coin is flipped until two heads in a row. Expected number of flips?', difficulty: 'Hard', tags: ['Probability'], votes: 233, round: 'Technical', date: '2025-03-19' },
+            { q: 'Derive the Black-Scholes PDE.', difficulty: 'Hard', tags: ['Derivatives'], votes: 167, round: 'Onsite', date: '2024-01-27' },
+            { q: 'Implement an LRU cache.', difficulty: 'Medium', tags: ['Coding'], votes: 142, round: 'Coding', date: '2026-05-28' },
+            { q: 'What is delta hedging and why do it?', difficulty: 'Medium', tags: ['Derivatives'], votes: 101, round: 'Onsite', date: '2023-06-11' },
           ],
           people: [
             { name: 'Wei Zhang', title: 'Quant Analyst', team: 'QR – Rates', tenure: '1 yr', school: 'MIT', note: 'PhD-to-industry; helpful on prep.' },
@@ -280,9 +280,9 @@ const DATA = {
             ]},
           ],
           questions: [
-            { q: 'What is Value-at-Risk and what are its limitations?', difficulty: 'Medium', tags: ['Risk'], votes: 96, round: 'Onsite' },
-            { q: 'Explain duration and convexity.', difficulty: 'Medium', tags: ['Fixed Income'], votes: 74, round: 'Technical' },
-            { q: 'Why BlackRock / why risk?', difficulty: 'Easy', tags: ['Fit'], votes: 81, round: 'All rounds' },
+            { q: 'What is Value-at-Risk and what are its limitations?', difficulty: 'Medium', tags: ['Risk'], votes: 96, round: 'Onsite', date: '2026-04-05' },
+            { q: 'Explain duration and convexity.', difficulty: 'Medium', tags: ['Fixed Income'], votes: 74, round: 'Technical', date: '2024-11-30' },
+            { q: 'Why BlackRock / why risk?', difficulty: 'Easy', tags: ['Fit'], votes: 81, round: 'All rounds', date: '2025-10-14' },
           ],
           people: [
             { name: 'Hannah Park', title: 'Risk Analyst', team: 'RQA', tenure: '2 yrs', school: 'UCLA', note: 'Approachable for coffee chats.' },

@@ -14,6 +14,20 @@ const escapeHtml = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmtMoney = (n) => '$' + Math.round(n).toLocaleString('en-US');
 const diffClass = (d) => ({ Easy: 'easy', Medium: 'medium', Hard: 'hard' }[d] || 'medium');
+const todayISO = () => new Date().toISOString().slice(0, 10);
+const daysSince = (s) => (Date.now() - new Date(s).getTime()) / 86400000;
+// Human-friendly "time ago" label from an ISO date string.
+function timeAgo(s) {
+  if (!s) return '';
+  const days = Math.floor(daysSince(s));
+  if (days <= 0) return 'today';
+  if (days < 30) return days === 1 ? '1 day ago' : `${days} days ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return months === 1 ? '1 month ago' : `${months} months ago`;
+  const years = Math.floor(days / 365);
+  return years === 1 ? '1 year ago' : `${years} years ago`;
+}
+const fmtDate = (s) => (s ? new Date(s).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '');
 // deterministic color from a string (for avatars)
 const colorFor = (str) => {
   let h = 0;
@@ -272,56 +286,106 @@ function userQKey(c, r) { return `ascend:userq:${c.id}:${r.id}`; }
 function renderQuestions(c, r) {
   const wrap = el('div');
   wrap.appendChild(el('div', 'callout',
-    `💬 <strong>Crowd-sourced from candidates.</strong> Upvote what helped you, filter by difficulty, and add a question you were asked.`));
+    `💬 <strong>Crowd-sourced from candidates.</strong> Upvote what helped you and add a question you were asked. <strong>Tip:</strong> sort by <em>Most recent</em> (or filter the time window) so you’re not prepping for questions that are no longer used.`));
 
   // merge seed questions with any user-added ones, apply stored vote deltas
   const userQ = JSON.parse(localStorage.getItem(userQKey(c, r)) || '[]');
   const voteDeltas = JSON.parse(localStorage.getItem(votesKey(c, r)) || '{}');
   let questions = [...r.questions, ...userQ].map((q, i) => ({
     ...q, key: q.key || `seed-${i}`, votes: (q.votes || 0) + (voteDeltas[q.key || `seed-${i}`] || 0),
+    date: q.date || todayISO(),
   }));
 
-  // toolbar (difficulty filters)
+  // ---- controls: difficulty, recency window, and sort ----
+  let activeFilter = 'All'; // difficulty
+  let timeframe = 'all';    // recency window
+  let sortMode = 'top';     // 'top' = most upvoted, 'recent' = newest first
+
+  // group of pill-buttons that update a variable and redraw
+  const makeGroup = (group, options, getActive, onPick) => {
+    const bar = el('span', 'q-group');
+    options.forEach(([val, label]) => {
+      const b = el('button', 'filter' + (val === getActive() ? ' active' : ''), label);
+      b.dataset.group = group;
+      b.onclick = () => {
+        onPick(val);
+        bar.querySelectorAll('[data-group]').forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        draw();
+      };
+      bar.appendChild(b);
+    });
+    return bar;
+  };
+
   const toolbar = el('div', 'q-toolbar');
+  toolbar.appendChild(makeGroup('diff',
+    [['All', 'All'], ['Easy', 'Easy'], ['Medium', 'Medium'], ['Hard', 'Hard']],
+    () => activeFilter, (v) => (activeFilter = v)));
+
+  const toolbar2 = el('div', 'q-toolbar');
+  toolbar2.appendChild(el('span', 'q-label', 'Sort'));
+  toolbar2.appendChild(makeGroup('sort',
+    [['top', 'Top voted'], ['recent', 'Most recent']],
+    () => sortMode, (v) => (sortMode = v)));
+  toolbar2.appendChild(el('span', 'q-label', 'Asked'));
+  toolbar2.appendChild(makeGroup('time',
+    [['all', 'Any time'], ['year', 'Past year'], ['6mo', 'Past 6 mo']],
+    () => timeframe, (v) => (timeframe = v)));
+
   const list = el('div');
-  let activeFilter = 'All';
-  ['All', 'Easy', 'Medium', 'Hard'].forEach((f) => {
-    const b = el('button', 'filter' + (f === 'All' ? ' active' : ''), f);
-    b.onclick = () => { activeFilter = f; toolbar.querySelectorAll('.filter').forEach((x) => x.classList.remove('active')); b.classList.add('active'); draw(); };
-    toolbar.appendChild(b);
-  });
   wrap.appendChild(toolbar);
+  wrap.appendChild(toolbar2);
   wrap.appendChild(list);
+
+  const withinTimeframe = (q) => {
+    if (timeframe === 'all') return true;
+    return daysSince(q.date) <= (timeframe === 'year' ? 365 : 183);
+  };
 
   const draw = () => {
     list.innerHTML = '';
-    questions
+    const rows = questions
       .filter((q) => activeFilter === 'All' || q.difficulty === activeFilter)
-      .sort((a, b) => b.votes - a.votes)
-      .forEach((q) => {
-        const tags = (q.tags || []).map((t) => `<span class="pill tag">${escapeHtml(t)}</span>`).join(' ');
-        const item = el('div', 'q-item', `
-          <div class="vote">
-            <button title="Upvote">▲</button>
-            <span class="n">${q.votes}</span>
+      .filter(withinTimeframe)
+      .sort((a, b) =>
+        sortMode === 'recent'
+          ? new Date(b.date) - new Date(a.date) || b.votes - a.votes
+          : b.votes - a.votes || new Date(b.date) - new Date(a.date)
+      );
+
+    if (!rows.length) {
+      list.appendChild(el('div', 'empty-note', 'No questions match these filters yet — try widening the time window.'));
+      return;
+    }
+
+    rows.forEach((q) => {
+      const tags = (q.tags || []).map((t) => `<span class="pill tag">${escapeHtml(t)}</span>`).join(' ');
+      const stale = daysSince(q.date) > 730; // older than ~2 years
+      const item = el('div', 'q-item', `
+        <div class="vote">
+          <button title="Upvote">▲</button>
+          <span class="n">${q.votes}</span>
+        </div>
+        <div class="q-body">
+          <div class="q-text">${escapeHtml(q.q)}</div>
+          <div class="q-meta">
+            <span class="pill ${diffClass(q.difficulty)}">${escapeHtml(q.difficulty)}</span>
+            ${tags}
+            ${q.round ? `<span class="round">· ${escapeHtml(q.round)}</span>` : ''}
+            <span class="asked" title="Reported ${fmtDate(q.date)}">🕑 asked ${timeAgo(q.date)}</span>
+            ${stale ? `<span class="stale" title="This question is over 2 years old and may no longer be used">may be dated</span>` : ''}
           </div>
-          <div class="q-body">
-            <div class="q-text">${escapeHtml(q.q)}</div>
-            <div class="q-meta">
-              <span class="pill ${diffClass(q.difficulty)}">${escapeHtml(q.difficulty)}</span>
-              ${tags}
-              ${q.round ? `<span class="round">· ${escapeHtml(q.round)}</span>` : ''}
-            </div>
-          </div>`);
-        $('.vote button', item).onclick = () => {
-          const d = JSON.parse(localStorage.getItem(votesKey(c, r)) || '{}');
-          d[q.key] = (d[q.key] || 0) + 1;
-          localStorage.setItem(votesKey(c, r), JSON.stringify(d));
-          q.votes += 1;
-          draw();
-        };
-        list.appendChild(item);
-      });
+        </div>`);
+      $('.vote button', item).onclick = () => {
+        const d = JSON.parse(localStorage.getItem(votesKey(c, r)) || '{}');
+        d[q.key] = (d[q.key] || 0) + 1;
+        localStorage.setItem(votesKey(c, r), JSON.stringify(d));
+        q.votes += 1;
+        draw();
+      };
+      list.appendChild(item);
+    });
   };
   draw();
 
@@ -340,6 +404,7 @@ function renderQuestions(c, r) {
     const entry = {
       key: 'user-' + Date.now(), q: text, difficulty: $('#newQDiff', form).value,
       round: $('#newQRound', form).value.trim() || 'Community', tags: ['Community'], votes: 1,
+      date: todayISO(),
     };
     const stored = JSON.parse(localStorage.getItem(userQKey(c, r)) || '[]');
     stored.push(entry);
